@@ -1,69 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone_flutter/screens/home/chats/custom_card.dart';
+import 'package:whatsapp_clone_flutter/screens/home/chats/model/chat.dart';
 import 'package:whatsapp_clone_flutter/screens/home/contacts/contacts_screen.dart';
-import 'package:whatsapp_clone_flutter/widgets/ui_helper.dart';
 
 class ChatsScreen extends StatelessWidget {
   const ChatsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var arrContent = [
-      {
-        "image": "assets/images/boarding.png",
-        "name": "Aron",
-        "lastmsg": "Lorem lorem",
-        "time": "5:45 am",
-        "msg": "7",
-      },
-      {
-        "image": "assets/images/whatsapp.png",
-        "name": "WhatsApp Support",
-        "lastmsg": "Lorem ",
-        "time": "5:45 am",
-        "msg": "1",
-      },
-      {
-        "image": "assets/images/boarding.png",
-        "name": "Aron",
-        "lastmsg": "Lorem lorem",
-        "time": "5:45 am",
-        "msg": "7",
-      },
-      {
-        "image": "assets/images/whatsapp.png",
-        "name": "WhatsApp Support",
-        "lastmsg": "Lorem ",
-        "time": "5:45 am",
-        "msg": "1",
-      },
-      {
-        "image": "assets/images/boarding.png",
-        "name": "Aron",
-        "lastmsg": "Lorem lorem",
-        "time": "5:45 am",
-        "msg": "7",
-      },
-      {
-        "image": "assets/images/whatsapp.png",
-        "name": "WhatsApp Support",
-        "lastmsg": "Lorem ",
-        "time": "5:45 am",
-        "msg": "1",
-      },
-      {
-        "image": "assets/images/boarding.png",
-        "name": "Aron",
-        "lastmsg": "Lorem lorem",
-        "time": "5:45 am",
-        "msg": "7",
-      },
-      {
-        "image": "assets/images/whatsapp.png",
-        "name": "WhatsApp Support",
-        "lastmsg": "Lorem ",
-        "time": "5:45 am",
-        "msg": "1",
-      },
+    List<ChatModel> chats = [
+      ChatModel(
+        name: "Ammar",
+        icon: "person.svg",
+        isGroup: false,
+        time: "5:45 am",
+        currentMessage: "Lorem lorem",
+        status: 'busy',
+      ),
+      ChatModel(
+        name: "Aron",
+        icon: "person.svg",
+        isGroup: false,
+        time: "8:00 am",
+        currentMessage: "Hello",
+        status: "can't talk whatsapp only",
+      ),
+      ChatModel(
+        name: "Friends",
+        icon: "groups.svg",
+        isGroup: true,
+        time: "10:00 am",
+        currentMessage: "Hy everyone",
+        status: "Good Friends",
+      ),
+      ChatModel(
+        name: "Abid",
+        icon: "person.svg",
+        isGroup: false,
+        time: "11:05 am",
+        currentMessage: "Aoa",
+        status: "Available",
+      ),
+      ChatModel(
+        name: "Classmates",
+        icon: "groups.svg",
+        isGroup: true,
+        time: "12:56 pm",
+        currentMessage: "Lorem lorem",
+        status: "Final year students",
+      ),
     ];
 
     return Scaffold(
@@ -72,42 +57,9 @@ class ChatsScreen extends StatelessWidget {
           const SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
-              itemCount: arrContent.length,
+              itemCount: chats.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  contentPadding: const EdgeInsets.only(right: 14),
-                  leading: CircleAvatar(
-                    radius: 40,
-                    backgroundImage:
-                        AssetImage(arrContent[index]["image"].toString()),
-                  ),
-                  title: UiHelper.customText(
-                      text: arrContent[index]["name"].toString(),
-                      height: 14,
-                      fontWeight: FontWeight.bold),
-                  subtitle: UiHelper.customText(
-                      text: arrContent[index]["lastmsg"].toString(),
-                      height: 13,
-                      color: const Color(0XFF889095)),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      UiHelper.customText(
-                          text: arrContent[index]["time"].toString(),
-                          height: 12,
-                          color: const Color(0XFF026500)),
-                      const SizedBox(height: 5),
-                      CircleAvatar(
-                        radius: 10,
-                        backgroundColor: const Color(0XFF036A01),
-                        child: UiHelper.customText(
-                            text: arrContent[index]["msg"].toString(),
-                            height: 12,
-                            color: Colors.white),
-                      ),
-                    ],
-                  ),
-                );
+                return CustomCard(chatModel: chats[index]);
               },
             ),
           ),
@@ -115,8 +67,11 @@ class ChatsScreen extends StatelessWidget {
       ),
       floatingActionButton: GestureDetector(
         onTap: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (ctx) => const ContactsScreen()));
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (ctx) => const ContactsScreen(),
+            ),
+          );
         },
         child: CircleAvatar(
           radius: 30,

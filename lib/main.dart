@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:whatsapp_clone_flutter/screens/home/home_screen.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0XFF00A884)),
         useMaterial3: false,
-        fontFamily: "Regular",
+        textTheme: GoogleFonts.openSansTextTheme(),
       ),
       home: const HomeScreen(),
     );
