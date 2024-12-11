@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone_flutter/screens/home/chats/custom_card.dart';
+import 'package:whatsapp_clone_flutter/screens/home/chats/widgets/custom_card.dart';
 import 'package:whatsapp_clone_flutter/screens/home/chats/model/chat.dart';
 import 'package:whatsapp_clone_flutter/screens/home/contacts/contacts_screen.dart';
 

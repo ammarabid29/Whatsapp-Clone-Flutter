@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:whatsapp_clone_flutter/screens/home/chats/individual_page.dart';
+import 'package:whatsapp_clone_flutter/screens/home/chats/individual_chat/individual_chat_screen.dart';
 import 'package:whatsapp_clone_flutter/screens/home/chats/model/chat.dart';
 import 'package:whatsapp_clone_flutter/widgets/ui_helper.dart';
 
@@ -14,7 +14,7 @@ class CustomCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (ctx) => IndividualPage(chatModel: chatModel),
+            builder: (ctx) => IndividualChatScreen(chatModel: chatModel),
           ),
         );
       },
