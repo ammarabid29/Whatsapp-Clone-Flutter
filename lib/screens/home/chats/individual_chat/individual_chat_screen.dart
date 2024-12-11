@@ -1,15 +1,21 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:web_socket_channel/web_socket_channel.dart';
 
-import 'package:whatsapp_clone_flutter/screens/home/chats/individual_chat/widgets/own_message.dart';
-import 'package:whatsapp_clone_flutter/screens/home/chats/individual_chat/widgets/reply_message.dart';
+// import 'package:whatsapp_clone_flutter/screens/home/chats/individual_chat/widgets/own_message.dart';
+// import 'package:whatsapp_clone_flutter/screens/home/chats/individual_chat/widgets/reply_message.dart';
 import 'package:whatsapp_clone_flutter/screens/home/chats/model/chat.dart';
 
 class IndividualChatScreen extends StatefulWidget {
-  const IndividualChatScreen({super.key, required this.chatModel});
+  const IndividualChatScreen({
+    super.key,
+    required this.chatModel,
+    required this.channel,
+  });
+
   final ChatModel chatModel;
+  final WebSocketChannel channel;
 
   @override
   State<IndividualChatScreen> createState() => _IndividualChatScreenState();
@@ -18,9 +24,7 @@ class IndividualChatScreen extends StatefulWidget {
 class _IndividualChatScreenState extends State<IndividualChatScreen> {
   bool show = false;
   FocusNode focusNode = FocusNode();
-  final TextEditingController _controller = TextEditingController();
-
-  IO.Socket? socket;
+  final TextEditingController _msgController = TextEditingController();
 
   @override
   void initState() {
@@ -34,8 +38,18 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
     });
   }
 
-  void connect() {
-    socket = IO.io("uri");
+  void _sendMyMessage() {
+    if (_msgController.text.isNotEmpty) {
+      widget.channel.sink.add(_msgController.text);
+      _msgController.clear();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _msgController.dispose();
+    widget.channel.sink.close();
   }
 
   @override
@@ -150,45 +164,23 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
                 children: [
                   Container(
                     height: MediaQuery.of(context).size.height - 155,
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: const [
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                        OwnMessageCard(),
-                        ReplyMessageCard(),
-                      ],
-                    ),
+                    // child: ListView(
+                    //   shrinkWrap: true,
+                    //   children: const [
+                    //     OwnMessageCard(),
+                    //     ReplyMessageCard(),
+                    //   ],
+                    // ),
+                    child: StreamBuilder(
+                        stream: widget.channel.stream,
+                        builder: (context, snapshot) {
+                          return Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Text(
+                              snapshot.hasData ? "${snapshot.data}" : "",
+                            ),
+                          );
+                        }),
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
@@ -206,7 +198,7 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
                                   borderRadius: BorderRadius.circular(25),
                                 ),
                                 child: TextFormField(
-                                  controller: _controller,
+                                  controller: _msgController,
                                   focusNode: focusNode,
                                   textAlignVertical: TextAlignVertical.center,
                                   keyboardType: TextInputType.multiline,
@@ -260,9 +252,9 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
                                     Theme.of(context).colorScheme.primary,
                                 radius: 25,
                                 child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: _sendMyMessage,
                                   icon: const Icon(
-                                    Icons.mic,
+                                    Icons.send,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -297,7 +289,7 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
     return EmojiPicker(
       onEmojiSelected: (emoji, category) {
         setState(() {
-          _controller.text = _controller.text + category.emoji;
+          _msgController.text = _msgController.text + category.emoji;
         });
       },
     );

@@ -1,4 +1,7 @@
+import 'package:uuid/uuid.dart';
+
 class ChatModel {
+  final String id;
   final String name;
   final String icon;
   final bool isGroup;
@@ -8,6 +11,7 @@ class ChatModel {
   bool select;
 
   ChatModel({
+    String? id,
     required this.name,
     required this.icon,
     required this.isGroup,
@@ -15,5 +19,5 @@ class ChatModel {
     required this.currentMessage,
     required this.status,
     this.select = false,
-  });
+  }) : id = id ?? const Uuid().v4();
 }
